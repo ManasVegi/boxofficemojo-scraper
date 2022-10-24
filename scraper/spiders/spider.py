@@ -7,27 +7,27 @@ class MojoSpider(scrapy.Spider):
     name = "mojo"
 
     start_urls = [
-    "https://www.boxofficemojo.com/year/2000/?grossesOption=totalGrosses",
-      "https://www.boxofficemojo.com/year/2001/?grossesOption=totalGrosses",
-      "https://www.boxofficemojo.com/year/2002/?grossesOption=totalGrosses",
-      "https://www.boxofficemojo.com/year/2003/?grossesOption=totalGrosses",
-      "https://www.boxofficemojo.com/year/2004/?grossesOption=totalGrosses",
-      "https://www.boxofficemojo.com/year/2005/?grossesOption=totalGrosses",
-      "https://www.boxofficemojo.com/year/2006/?grossesOption=totalGrosses",
-      "https://www.boxofficemojo.com/year/2007/?grossesOption=totalGrosses",
-      "https://www.boxofficemojo.com/year/2008/?grossesOption=totalGrosses",
-      "https://www.boxofficemojo.com/year/2009/?grossesOption=totalGrosses",
-      "https://www.boxofficemojo.com/year/2010/?grossesOption=totalGrosses",
-      "https://www.boxofficemojo.com/year/2011/?grossesOption=totalGrosses",
-      "https://www.boxofficemojo.com/year/2012/?grossesOption=totalGrosses",
-      "https://www.boxofficemojo.com/year/2013/?grossesOption=totalGrosses",
-      "https://www.boxofficemojo.com/year/2014/?grossesOption=totalGrosses",
-      "https://www.boxofficemojo.com/year/2015/?grossesOption=totalGrosses",
-      "https://www.boxofficemojo.com/year/2016/?grossesOption=totalGrosses",
-      "https://www.boxofficemojo.com/year/2017/?grossesOption=totalGrosses",
-      "https://www.boxofficemojo.com/year/2018/?grossesOption=totalGrosses",
-      "https://www.boxofficemojo.com/year/2019/?grossesOption=totalGrosses",
-      "https://www.boxofficemojo.com/year/2020/?grossesOption=totalGrosses"
+    "https://www.boxofficemojo.com/year/2002/?grossesOption=totalGrosses",
+      # "https://www.boxofficemojo.com/year/2001/?grossesOption=totalGrosses",
+      # "https://www.boxofficemojo.com/year/2002/?grossesOption=totalGrosses",
+      # "https://www.boxofficemojo.com/year/2003/?grossesOption=totalGrosses",
+      # "https://www.boxofficemojo.com/year/2004/?grossesOption=totalGrosses",
+      # "https://www.boxofficemojo.com/year/2005/?grossesOption=totalGrosses",
+      # "https://www.boxofficemojo.com/year/2006/?grossesOption=totalGrosses",
+      # "https://www.boxofficemojo.com/year/2007/?grossesOption=totalGrosses",
+      # "https://www.boxofficemojo.com/year/2008/?grossesOption=totalGrosses",
+      # "https://www.boxofficemojo.com/year/2009/?grossesOption=totalGrosses",
+      # "https://www.boxofficemojo.com/year/2010/?grossesOption=totalGrosses",
+      # "https://www.boxofficemojo.com/year/2011/?grossesOption=totalGrosses",
+      # "https://www.boxofficemojo.com/year/2012/?grossesOption=totalGrosses",
+      # "https://www.boxofficemojo.com/year/2013/?grossesOption=totalGrosses",
+      # "https://www.boxofficemojo.com/year/2014/?grossesOption=totalGrosses",
+      # "https://www.boxofficemojo.com/year/2015/?grossesOption=totalGrosses",
+      # "https://www.boxofficemojo.com/year/2016/?grossesOption=totalGrosses",
+      # "https://www.boxofficemojo.com/year/2017/?grossesOption=totalGrosses",
+      # "https://www.boxofficemojo.com/year/2018/?grossesOption=totalGrosses",
+      # "https://www.boxofficemojo.com/year/2019/?grossesOption=totalGrosses",
+      # "https://www.boxofficemojo.com/year/2020/?grossesOption=totalGrosses"
     ]
 
     def parse(self, response):
@@ -56,11 +56,12 @@ class MojoSpider(scrapy.Spider):
     def parse_link(self, response):
 
         item = response.meta.get('item') #since there are no return values this is how to return item
-        print("came here")
         distributor = response.xpath('//*[@id="a-page"]/main/div/div[3]/div[4]/div[span = "Distributor"]/span[2]/text()').extract() 
         running_time = response.xpath('//*[@id="a-page"]/main/div/div[3]/div[4]/div[span = "Running Time"]/span[2]/text()').extract()
         genres = response.xpath('//*[@id="a-page"]/main/div/div[3]/div[4]/div[span = "Genres"]/span[2]/text()').extract()
         mpaa = response.xpath('//*[@id="a-page"]/main/div/div[3]/div[4]/div[span = "MPAA"]/span[2]/text()').extract()
+
+        budget = response.xpath('//*[@id="a-page"]/main/div/div[3]/div[4]/div[span[1] = "Budget"]//span[@class="money"]/text()').extract()
         #distributor = data.xpath('[span[1]="Distributor"]/span[2].text()').extract()
         # movie_title = response.xpath('//*[@id="a-page"]/main/div/div[1]/div[1]/div/div/div[2]/h1/text()')[0].extract()
         #print(movie_title)
@@ -70,5 +71,6 @@ class MojoSpider(scrapy.Spider):
         item['running_time'] = "-" if len(running_time) == 0 else running_time[0]
         item['genres'] = "-" if len(genres) == 0 else genres[0]
         item['mpaa'] = "-" if len(mpaa) == 0 else mpaa[0]
+        item['budget'] = "-" if len(budget) == 0 else budget[0]
         print(item)
         yield item
